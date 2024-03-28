@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pixels</title>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' https://play.pixels.xyz 'unsafe-inline';"
+    />
+    <style>
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .container input[type="number"],
+      .container button {
+        margin-right: 10px;
+      }
+
+      .landcontainer {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 1920px;
+        margin: 20px auto;
+      }
+
+      .landimg {
+        height: 600px;
+        width: 600px;
+        margin: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+      }
+
+      .land-item {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+
+      .landtext {
+        margin-right: 10px;
+      }
+
+      .land-item-content {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 5px;
+        margin-left: 9px;
+        margin-right: 20px;
+      }
+
+      .delete-button,
+      .next-button,
+      .prev-button {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+
+      .next-button,
+      .prev-button {
+        background-color: #4caf50;
+      }
+
+      .next-button:hover,
+      .prev-button:hover {
+        background-color: #45a049;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .blah {
+        margin-right: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pixels cctv credits to Soultzy</h1>
+    <div class="blah">
+      <input type="number" id="land" placeholder="Enter Land 1-5000" />
+      <button onclick="viewland()">View</button>
+      <button onclick="deleteAllLands()">Delete All Lands</button>
+    </div>
+    <p id="warn"></p>
+
+    <div id="landContainer" class="landcontainer"></div>
+
+    <script>
+      var displayedLands = 0;
+      var currentLandIndex = -1;
+
+      function viewland() {
+        var sourceInput = document.getElementById("land");
+        var sourceUrl = sourceInput.value.trim();
+        var landContainer = document.getElementById("landContainer");
+
+        if (sourceUrl >= 1 && sourceUrl <= 5000 && displayedLands < 6) {
+          var landId = displayedLands + 1;
+
+          var iframe = document.createElement("iframe");
+          iframe.className = "landimg";
+          iframe.src = "https://play.pixels.xyz/pixels/share/" + sourceUrl;
+          iframe.frameBorder = "0";
+          iframe.id = "land_" + landId;
+
+          var landText = document.createElement("p");
+          landText.className = "landtext";
+          landText.innerText = "Land Number: " + sourceUrl;
+          landText.id = "land_" + landId + "_text";
+
+          var deleteButton = document.createElement("button");
+          deleteButton.innerText = "Delete";
+          deleteButton.className = "delete-button";
+          deleteButton.id = "land_" + landId + "_delete";
+          deleteButton.onclick = function () {
+            landContainer.removeChild(wrapperDiv);
+            displayedLands--;
+          };
+
+          var nextButton = document.createElement("button");
+          nextButton.innerText = "Next";
+          nextButton.className = "next-button";
+          nextButton.id = "land_" + landId + "_next";
+          nextButton.onclick = function () {
+            alert("currently disabled");
+          };
+
+          var prevButton = document.createElement("button");
+          prevButton.innerText = "Previous";
+          prevButton.className = "prev-button";
+          prevButton.id = "land_" + landId + "_prev";
+          prevButton.onclick = function () {
+            alert("currently disabled");
+          };
+
+          var contentWrapper = document.createElement("div");
+          contentWrapper.className = "land-item-content";
+          contentWrapper.appendChild(landText);
+          contentWrapper.appendChild(prevButton);
+          contentWrapper.appendChild(nextButton);
+          contentWrapper.appendChild(deleteButton);
+
+          var wrapperDiv = document.createElement("div");
+          wrapperDiv.className = "land-item";
+          wrapperDiv.appendChild(iframe);
+          wrapperDiv.appendChild(contentWrapper);
+          wrapperDiv.id = "land_" + landId;
+
+          landContainer.appendChild(wrapperDiv);
+          document.getElementById("land").value = "";
+          displayedLands++;
+          currentLandIndex = displayedLands - 1;
+        } else if (displayedLands >= 6) {
+          document.getElementById("warn").innerText =
+            "You have reached the maximum limit of displayed lands (6).";
+        } else {
+          document.getElementById("warn").innerText =
+            "Please enter a number between 1 and 5000.";
+        }
+      }
+
+      function deleteAllLands() {
+        var landContainer = document.getElementById("landContainer");
+        landContainer.innerHTML = "";
+        displayedLands = 0;
+        currentLandIndex = -1;
+      }
+    </script>
+  </body>
+</html>
